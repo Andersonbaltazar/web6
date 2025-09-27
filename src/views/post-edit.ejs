@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Editar Post - Social Media</title>
+  <!-- Importar Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <!-- Iconos de Google -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="grey lighten-4">
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper teal">
+      <a href="/" class="brand-logo center">Social Media</a>
+      <ul class="left hide-on-med-and-down">
+        <li><a href="/posts"><i class="material-icons left">arrow_back</i>Volver</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container" style="margin-top: 30px;">
+    <div class="row">
+      <div class="col s12 m8 offset-m2">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title center-align">Editar Post</span>
+            
+            <% if (typeof error !== 'undefined') { %>
+              <div class="card-panel red lighten-4 red-text">
+                <%= error %>
+              </div>
+            <% } %>
+
+            <form action="/posts/<%= post._id %>/edit" method="POST">
+              <!-- Título -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="title" name="title" type="text" class="validate" required minlength="5" maxlength="30" value="<%= post.title %>">
+                  <label for="title" class="active">Título del Post</label>
+                  <span class="helper-text" data-error="El título debe tener entre 5 y 30 caracteres">Entre 5 y 30 caracteres</span>
+                </div>
+              </div>
+
+              <!-- Contenido -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <textarea id="content" name="content" class="materialize-textarea validate" required minlength="10"><%= post.content %></textarea>
+                  <label for="content" class="active">Contenido del Post</label>
+                  <span class="helper-text" data-error="El contenido debe tener al menos 10 caracteres">Mínimo 10 caracteres</span>
+                </div>
+              </div>
+
+              <!-- URL de Imagen -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="imageUrl" name="imageUrl" type="url" class="validate" value="<%= post.imageUrl || '' %>">
+                  <label for="imageUrl" class="<%= post.imageUrl ? 'active' : '' %>">URL de Imagen (opcional)</label>
+                  <span class="helper-text" data-error="Ingresa una URL válida">Ejemplo: https://ejemplo.com/imagen.jpg</span>
+                </div>
+              </div>
+
+              <!-- Hashtags -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="hashtags" name="hashtags" type="text" class="validate" value="<%= post.hashtags ? post.hashtags.join(', ') : '' %>">
+                  <label for="hashtags" class="<%= post.hashtags && post.hashtags.length > 0 ? 'active' : '' %>">Hashtags (opcional)</label>
+                  <span class="helper-text">Separa los hashtags con comas. Ejemplo: tecnología, nodejs, web</span>
+                </div>
+              </div>
+
+              <!-- Vista previa de imagen si existe -->
+              <% if (post.imageUrl) { %>
+                <div class="row">
+                  <div class="col s12">
+                    <p><strong>Vista previa de imagen actual:</strong></p>
+                    <img src="<%= post.imageUrl %>" alt="Vista previa" class="responsive-img" style="max-height: 200px;">
+                  </div>
+                </div>
+              <% } %>
+
+              <!-- Información de fechas -->
+              <div class="row">
+                <div class="col s12">
+                  <p class="grey-text">
+                    <small>Creado: <%= new Date(post.createdAt).toLocaleString('es-ES') %></small>
+                    <% if (post.updatedAt) { %>
+                      <br><small>Última actualización: <%= new Date(post.updatedAt).toLocaleString('es-ES') %></small>
+                    <% } %>
+                  </p>
+                </div>
+              </div>
+
+              <!-- Botones -->
+              <div class="row">
+                <div class="col s12 center-align">
+                  <button type="submit" class="btn waves-effect waves-light teal">
+                    <i class="material-icons left">save</i>Guardar Cambios
+                  </button>
+                  <a href="/posts" class="btn waves-effect waves-light grey">
+                    <i class="material-icons left">cancel</i>Cancelar
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Importar Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar textareas
+      M.textareaAutoResize(document.getElementById('content'));
+      
+      // Validación en tiempo real
+      var inputs = document.querySelectorAll('input[type=text], input[type=url], textarea');
+      inputs.forEach(function(input) {
+        input.addEventListener('blur', function() {
+          if (this.checkValidity()) {
+            this.classList.add('valid');
+            this.classList.remove('invalid');
+          } else {
+            this.classList.add('invalid');
+            this.classList.remove('valid');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

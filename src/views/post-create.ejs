@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Post - Social Media</title>
+  <!-- Importar Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <!-- Iconos de Google -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="grey lighten-4">
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper teal">
+      <a href="/" class="brand-logo center">Social Media</a>
+      <ul class="left hide-on-med-and-down">
+        <li><a href="/posts"><i class="material-icons left">arrow_back</i>Volver</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container" style="margin-top: 30px;">
+    <div class="row">
+      <div class="col s12 m8 offset-m2">
+        <div class="card">
+          <div class="card-content">
+            <span class="card-title center-align">Crear Nuevo Post</span>
+            
+            <% if (typeof error !== 'undefined') { %>
+              <div class="card-panel red lighten-4 red-text">
+                <%= error %>
+              </div>
+            <% } %>
+
+            <form action="/posts/create" method="POST">
+              <!-- Campo UserId (temporal - en una app real estaría en sesión) -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="userId" name="userId" type="text" class="validate" required>
+                  <label for="userId">ID del Usuario</label>
+                  <span class="helper-text" data-error="Campo requerido">Ingresa el ID del usuario que crea el post</span>
+                </div>
+              </div>
+
+              <!-- Título -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="title" name="title" type="text" class="validate" required minlength="5" maxlength="30">
+                  <label for="title">Título del Post</label>
+                  <span class="helper-text" data-error="El título debe tener entre 5 y 30 caracteres">Entre 5 y 30 caracteres</span>
+                </div>
+              </div>
+
+              <!-- Contenido -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <textarea id="content" name="content" class="materialize-textarea validate" required minlength="10"></textarea>
+                  <label for="content">Contenido del Post</label>
+                  <span class="helper-text" data-error="El contenido debe tener al menos 10 caracteres">Mínimo 10 caracteres</span>
+                </div>
+              </div>
+
+              <!-- URL de Imagen -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="imageUrl" name="imageUrl" type="url" class="validate">
+                  <label for="imageUrl">URL de Imagen (opcional)</label>
+                  <span class="helper-text" data-error="Ingresa una URL válida">Ejemplo: https://ejemplo.com/imagen.jpg</span>
+                </div>
+              </div>
+
+              <!-- Hashtags -->
+              <div class="row">
+                <div class="input-field col s12">
+                  <input id="hashtags" name="hashtags" type="text" class="validate">
+                  <label for="hashtags">Hashtags (opcional)</label>
+                  <span class="helper-text">Separa los hashtags con comas. Ejemplo: tecnología, nodejs, web</span>
+                </div>
+              </div>
+
+              <!-- Botones -->
+              <div class="row">
+                <div class="col s12 center-align">
+                  <button type="submit" class="btn waves-effect waves-light teal">
+                    <i class="material-icons left">send</i>Crear Post
+                  </button>
+                  <a href="/posts" class="btn waves-effect waves-light grey">
+                    <i class="material-icons left">cancel</i>Cancelar
+                  </a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Importar Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar caracteres de conteo para textareas
+      M.CharacterCounter.init(document.querySelectorAll('input[data-length], textarea[data-length]'));
+      
+      // Validación en tiempo real
+      var inputs = document.querySelectorAll('input[type=text], input[type=url], textarea');
+      inputs.forEach(function(input) {
+        input.addEventListener('blur', function() {
+          if (this.checkValidity()) {
+            this.classList.add('valid');
+            this.classList.remove('invalid');
+          } else {
+            this.classList.add('invalid');
+            this.classList.remove('valid');
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

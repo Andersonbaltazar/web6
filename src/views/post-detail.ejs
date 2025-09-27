@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= post.title %> - Social Media</title>
+  <!-- Importar Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <!-- Iconos de Google -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="grey lighten-4">
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper teal">
+      <a href="/" class="brand-logo center">Social Media</a>
+      <ul class="left hide-on-med-and-down">
+        <li><a href="/posts"><i class="material-icons left">arrow_back</i>Volver a Posts</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container" style="margin-top: 30px;">
+    <div class="row">
+      <div class="col s12 m8 offset-m2">
+        <div class="card">
+          <!-- Imagen del post si existe -->
+          <% if (post.imageUrl) { %>
+            <div class="card-image">
+              <img src="<%= post.imageUrl %>" alt="<%= post.title %>">
+              <span class="card-title" style="background: rgba(0,0,0,0.5); padding: 10px; border-radius: 5px;">
+                <%= post.title %>
+              </span>
+            </div>
+          <% } %>
+          
+          <div class="card-content">
+            <% if (!post.imageUrl) { %>
+              <span class="card-title"><%= post.title %></span>
+            <% } %>
+            
+            <!-- Contenido del post -->
+            <div class="content-section" style="margin: 20px 0;">
+              <p style="font-size: 1.1em; line-height: 1.6;"><%= post.content %></p>
+            </div>
+
+            <!-- Hashtags -->
+            <% if (post.hashtags && post.hashtags.length > 0) { %>
+              <div class="hashtags-section" style="margin: 20px 0;">
+                <p><strong>Hashtags:</strong></p>
+                <% post.hashtags.forEach(function(hashtag) { %>
+                  <span class="chip teal lighten-4">#<%= hashtag %></span>
+                <% }); %>
+              </div>
+            <% } %>
+
+            <!-- Información del autor y fechas -->
+            <div class="author-info" style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #ddd;">
+              <div class="row">
+                <div class="col s12 m6">
+                  <p><i class="material-icons tiny">person</i> <strong>Autor:</strong> <%= post.user ? (post.user.name + ' ' + post.user.lastName) : 'Desconocido' %></p>
+                  <% if (post.user && post.user.email) { %>
+                    <p><i class="material-icons tiny">email</i> <%= post.user.email %></p>
+                  <% } %>
+                </div>
+                <div class="col s12 m6">
+                  <p><i class="material-icons tiny">schedule</i> <strong>Creado:</strong> <%= new Date(post.createdAt).toLocaleString('es-ES') %></p>
+                  <% if (post.updatedAt) { %>
+                    <p><i class="material-icons tiny">update</i> <strong>Actualizado:</strong> <%= new Date(post.updatedAt).toLocaleString('es-ES') %></p>
+                  <% } %>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Acciones del post -->
+          <div class="card-action">
+            <div class="right">
+              <a href="/posts/<%= post._id %>/edit" class="btn waves-effect waves-light teal">
+                <i class="material-icons left">edit</i>Editar
+              </a>
+              <form style="display: inline; margin-left: 10px;" action="/posts/<%= post._id %>/delete" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este post?')">
+                <button type="submit" class="btn waves-effect waves-light red">
+                  <i class="material-icons left">delete</i>Eliminar
+                </button>
+              </form>
+            </div>
+            <a href="/posts" class="btn waves-effect waves-light grey">
+              <i class="material-icons left">list</i>Ver Todos
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Importar Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>

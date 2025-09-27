@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Social Media - Posts</title>
+  <!-- Importar Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <!-- Iconos de Google -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body class="grey lighten-4">
+
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper teal">
+      <a href="/" class="brand-logo center">Social Media</a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="/posts/create"><i class="material-icons left">add</i>Nuevo Post</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <h4 class="center-align">Todos los Posts</h4>
+        
+        <!-- Botón flotante para agregar post -->
+        <div class="fixed-action-btn">
+          <a href="/posts/create" class="btn-floating btn-large teal">
+            <i class="large material-icons">add</i>
+          </a>
+        </div>
+
+        <% if (posts && posts.length > 0) { %>
+          <% posts.forEach(function(post) { %>
+            <div class="col s12 m6 l4">
+              <div class="card">
+                <% if (post.imageUrl) { %>
+                  <div class="card-image">
+                    <img src="<%= post.imageUrl %>" alt="Imagen del post">
+                  </div>
+                <% } %>
+                <div class="card-content">
+                  <span class="card-title"><%= post.title %></span>
+                  <p><%= post.content %></p>
+                  
+                  <% if (post.hashtags && post.hashtags.length > 0) { %>
+                    <p>
+                      <strong>Hashtags:</strong>
+                      <% post.hashtags.forEach(function(hashtag) { %>
+                        <span class="chip"><%= hashtag %></span>
+                      <% }); %>
+                    </p>
+                  <% } %>
+                  
+                  <p class="grey-text">
+                    <small>Creado: <%= new Date(post.createdAt).toLocaleDateString('es-ES') %></small>
+                    <% if (post.updatedAt) { %>
+                      <br><small>Actualizado: <%= new Date(post.updatedAt).toLocaleDateString('es-ES') %></small>
+                    <% } %>
+                  </p>
+                </div>
+                <div class="card-action">
+                  <div class="right">
+                    <a href="/posts/<%= post._id %>/edit" class="btn-flat tooltip" data-tooltip="Editar">
+                      <i class="material-icons teal-text">edit</i>
+                    </a>
+                    <form style="display: inline;" action="/posts/<%= post._id %>/delete" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este post?')">
+                      <button type="submit" class="btn-flat tooltip" data-tooltip="Eliminar">
+                        <i class="material-icons red-text">delete</i>
+                      </button>
+                    </form>
+                  </div>
+                  <span><strong>Autor:</strong> <%= post.user ? (post.user.name + ' ' + post.user.lastName) : 'Desconocido' %></span>
+                </div>
+              </div>
+            </div>
+          <% }); %>
+        <% } else { %>
+          <div class="col s12">
+            <div class="card-panel center-align">
+              <h5>No hay posts aún</h5>
+              <p>¡Sé el primero en crear un post!</p>
+              <a href="/posts/create" class="btn teal">Crear Post</a>
+            </div>
+          </div>
+        <% } %>
+      </div>
+    </div>
+  </div>
+
+  <!-- Importar Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Inicializar tooltips
+      var tooltips = document.querySelectorAll('.tooltip');
+      M.Tooltip.init(tooltips);
+    });
+  </script>
+</body>
+</html>
